@@ -1,0 +1,92 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": false,
+  "graphTooltip": 1,
+  "id": null,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "options": { "0": { "color": "red", "text": "Down" }, "1": { "color": "green", "text": "Up" } }, "type": "value" }
+          ],
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] }
+        }
+      },
+      "gridPos": { "h": 5, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": [ "lastNotNull" ], "fields": "", "values": false } },
+      "targets": [ { "expr": "up{job=\"node\"}", "legendFormat": "{{instance}}", "refId": "A" } ],
+      "title": "Host reachability",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "min": 0, "max": 100, "unit": "percent" } },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+      "id": 2,
+      "targets": [ { "expr": "100 * (1 - avg by (instance) (rate(node_cpu_seconds_total{job=\"node\",mode=\"idle\"}[$__rate_interval])))", "legendFormat": "{{instance}}", "refId": "A" } ],
+      "title": "CPU used",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "min": 0, "max": 100, "unit": "percent" } },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+      "id": 3,
+      "targets": [ { "expr": "100 * (1 - node_memory_MemAvailable_bytes{job=\"node\"} / node_memory_MemTotal_bytes{job=\"node\"})", "legendFormat": "{{instance}}", "refId": "A" } ],
+      "title": "Memory used",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "min": 0, "max": 100, "unit": "percent" } },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 13 },
+      "id": 4,
+      "targets": [ { "expr": "100 * (1 - node_filesystem_avail_bytes{job=\"node\",mountpoint=\"/\",fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{job=\"node\",mountpoint=\"/\",fstype!~\"tmpfs|overlay\"})", "legendFormat": "{{instance}}", "refId": "A" } ],
+      "title": "Root filesystem used",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "min": 0, "unit": "bytes" } },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 13 },
+      "id": 5,
+      "targets": [ { "expr": "node_filesystem_avail_bytes{job=\"node\",mountpoint=\"/srv\",fstype!~\"tmpfs|overlay\"}", "legendFormat": "{{instance}}", "refId": "A" } ],
+      "title": "/srv free",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "min": 0, "unit": "Bps" } },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 21 },
+      "id": 6,
+      "targets": [
+        { "expr": "sum by (instance) (rate(node_network_receive_bytes_total{job=\"node\",device!~\"lo|veth.*\"}[$__rate_interval]))", "legendFormat": "{{instance}} received", "refId": "A" },
+        { "expr": "sum by (instance) (rate(node_network_transmit_bytes_total{job=\"node\",device!~\"lo|veth.*\"}[$__rate_interval]))", "legendFormat": "{{instance}} sent", "refId": "B" }
+      ],
+      "title": "Network traffic",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "min": 0, "unit": "s" } },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 21 },
+      "id": 7,
+      "targets": [ { "expr": "time() - node_boot_time_seconds{job=\"node\"}", "legendFormat": "{{instance}}", "refId": "A" } ],
+      "title": "Uptime",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 39,
+  "tags": [ "fleet" ],
+  "time": { "from": "now-6h", "to": "now" },
+  "timezone": "browser",
+  "title": "Fleet hosts",
+  "uid": "cmutli-fleet-hosts",
+  "version": 1
+}
