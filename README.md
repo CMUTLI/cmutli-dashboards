@@ -23,4 +23,4 @@ out of dashboard exports and provisioning files.
 
 The fleet pins this repository as a flake input and mounts `grafana/` read-only
 into the Grafana container. After pushing dashboard changes, update the input
-in `cmutli-fleet` and deploy `ops-01.tli.cmu.edu`.
+in `cmutli-fleet` and deploy the hosts serving `ops.tli.cmu.edu`.
